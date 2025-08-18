@@ -1,0 +1,115 @@
+{% extends 'main/../base.html' %}
+
+{% block title %}User Profile Dashboard{% endblock %}
+
+{% block content %}
+    <!--
+    Note: The Tailwind CSS and font links are typically placed in the base.html file
+    for a Django project, but are included here for a self-contained example.
+    -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(to top, #89bef0, #ffffff 50%);
+        }
+        .dashboard-font {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
+
+    <div class="max-w-7xl mx-auto p-6 md:p-10">
+        <!-- Dashboard Header Section -->
+        <header class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 mb-8">
+        </header>
+
+        <!-- User Profile Section styled to match dashboard -->
+        <h1 class="text-3xl md:text-4xl font-bold mb-6 mt-10">My Profile</h1>
+        <div class="bg-white p-6 md:p-10 rounded-3xl shadow-lg mb-8">
+            <div class="flex flex-col lg:flex-row items-start lg:items-center space-y-6 lg:space-y-0 lg:space-x-8">
+                <!-- Profile Image -->
+                <div class="flex-shrink-0 relative group">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="rounded-full w-28 h-28 lg:w-32 lg:h-32 object-cover shadow-inner transition-opacity duration-300">
+                    {% else %}
+                        <img src="https://placehold.co/120x120/E5E7EB/4B5563?text=Profile" alt="No profile picture" class="rounded-full w-28 h-28 lg:w-32 lg:h-32 object-cover shadow-inner transition-opacity duration-300">
+                    {% endif %}
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <label for="profile-upload" class="cursor-pointer text-white p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14.88V20a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5.12"/><path d="M12 2v13.5"/><path d="M7 8l5-5 5 5"/></svg>
+                        </label>
+                        <input type="file" id="profile-upload" class="hidden">
+                    </div>
+                </div>
+                <!-- Profile Details & Stats -->
+                <div class="flex-grow">
+                    <!-- Name & Role -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div>
+                            <h2 class="text-xl md:text-2xl font-semibold text-gray-800">{{ user.username }}</h2>
+                            <p class="text-sm text-gray-500">Member since: {{ user.date_joined|date:"F j, Y" }}</p>
+                        </div>
+                        <div class="flex space-x-2 text-gray-500">
+                        </div>
+                    </div>
+
+                    <!-- Contact Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-y-2 mb-6 text-sm text-gray-700">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-gray-400">✉️</span>
+                            <span class="font-medium">{{ user.email }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Summary Stats (Placeholder for dynamic data) -->
+                    <div class="grid grid-cols-3 gap-4 border-t pt-4 border-gray-200">
+                        <div>
+                            <h3 class="text-lg md:text-xl font-bold">1</h3>
+                            <p class="text-sm text-gray-500">Total Products</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Display Section (Original code) -->
+        <div class="mt-8">
+            <h3 class="text-xl font-semibold">Your Products</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+                {% for product in products %}
+                    <div class="bg-white-200 rounded-xl shadow-lg overflow-hidden transform transition-transform duration-300 hover:scale-105">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.title }}" class="w-full h-auto">
+                        {% else %}
+                            <img src="https://via.placeholder.com/150" alt="No Image Available" class="w-full h-auto">
+                        {% endif %}
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg">{{ product.title }}</h3>
+                            <p class="text-sm text-gray-500">{{ product.category }}</p>
+                            <p class="text-sm text-gray-600">{{ product.description|truncatewords:20 }}</p>
+                            <div class="flex items-center justify-between mt-2">
+                                <div>
+                                    <p class="font-medium text-gray-900">${{ product.price }}</p>
+                                </div>
+                                {% if product.is_sold %}
+                                    <div class="text-sm text-gray-500">Sold</div>
+                                {% endif %}
+                            </div>
+                            <div class="mt-3">
+                                <a href="{{ product.get_absolute_url }}" class="text-indigo-600 hover:text-indigo-700">View Product</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="col-12 text-center py-5">
+                        <p class="text-muted">No products found.</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

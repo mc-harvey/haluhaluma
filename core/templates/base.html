@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Haluhalu Marketplace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        body { font-family: 'Poppins', sans-serif; }
+        .navbar {
+        background: linear-gradient(to right, #00ffff, #ff0099);
+        padding: 15px 20px;
+        color: white;
+        font-size: 18px;
+    }
+        .hover-grow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+    }
+    .hover-grow:hover {
+    transform: scale(1.1);
+    }
+    .brand-text {
+    font-weight: 800;
+    font-size: 2rem;
+    }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container mx-auto px-0 py-0 flex justify-between items-center">
+                    <a href="{% url 'base' %}" class="flex items-center space-x-2 hover-grow">
+            <img src="/static/images/logo_white.png" alt=" " class="h-12 w-auto">
+           <span class="font-extrabold text-xl">MARKETPLACE</span>
+        </a>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'product_list' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Products</a>
+
+
+                <div class="relative group">
+                    <button class="text-white text-base font-thin hover:text-gray-300 transition duration-200 focus:outline-none">
+                        Categories
+                        <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200 group-hover:rotate-180"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform scale-95 origin-top-right">
+                        <a href="{% url 'product_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">All Categories</a>
+                        {% for category in categories %}
+                            <a href="{% url 'category_list' category %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ category }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% if user.is_authenticated %}
+                    {% if user.is_seller %}
+                        <a href="{% url 'product_create' %}" class="flex items-center text-white text-base font-thin hover:text-gray-900 transition duration-200">
+                            <i class="fas fa-plus-circle text-xl"></i>
+                            <span class="ml-2 hidden sm:inline">Add Product</span>
+                        </a>
+                    {% endif %}
+
+                    {# Messaging Links #}
+                    <a href="{% url 'inbox' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Inbox</a>
+                    {# REMOVED: <a href="{% url 'sent_messages' %}" class="text-white hover:text-gray-300 transition duration-200">Sent</a> #}
+
+                    <a href="{% url 'profile' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Profile</a>
+                    <a href="{% url 'logout' %}" class="px-2 py-1 bg-red-500 text-white text-base rounded-md hover:bg-red-600 transition duration-200">Log out</a>
+                {% else %}
+                    <a href="{% url 'signup' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Sign Up</a>
+                    <a href="{% url 'login' %}" class="px-2 py-1 bg-blue-500 text-white text-base rounded-md hover:bg-blue-600 transition duration-200">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-6 py-8 flex-grow">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="p-4 mb-4 rounded-lg text-white {% if message.tags == 'success' %}bg-green-500{% elif message.tags == 'error' %}bg-red-500{% elif message.tags == 'info' %}bg-blue-500{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="bg-gray-800 text-white px-4 py-1 text-center mt-8">
+        <p>&copy; 2024 HaluHalu Marketplace. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdownButton = document.querySelector('.group > button');
+            const dropdownMenu = document.querySelector('.group > div');
+
+            dropdownButton.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('opacity-0');
+                dropdownMenu.classList.toggle('invisible');
+                dropdownMenu.classList.toggle('scale-95');
+                dropdownMenu.classList.toggle('scale-100');
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                    dropdownMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+                    dropdownMenu.classList.remove('scale-100');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
