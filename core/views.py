@@ -41,7 +41,8 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, f'You have successfully logged in as {user.username}.')
-            next_url = request.GET.get('next') or 'base'
+            # This will redirect to 'product_list' by default after login
+            next_url = request.GET.get('next') or 'product_list'
             return redirect(next_url)
         else:
             messages.error(request, 'Invalid username or password.')
@@ -56,13 +57,20 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    return render(request, 'main/templates/profile.html')
+    user = request.user  # Get the logged-in user
+
+    # Fetch the products created by the logged-in user
+    products = Product.objects.filter(seller=user, is_public=True, is_sold=False)
+
+    # Render the profile page with the user's information and products, using the correct path to the template
+    return render(request, 'main/profile.html', {'user': user, 'products': products})
 
 
+# REVISED: Make the base view redirect to the product_list
 def base(request):
-    return render(request, 'base.html')
+    return redirect('product_list') # Redirects directly to the product list view
 
-
+# ProductListView and other views remain the same as previously provided
 class ProductListView(ListView):
     model = Product
     template_name = 'core/product_list.html'
@@ -388,12 +396,3 @@ def delete_review(request, pk):
     review.delete()
     messages.success(request, "Review deleted successfully!")
     return redirect('product_detail', pk=review.product.pk)
-@login_required
-def profile_view(request):
-    user = request.user  # Get the logged-in user
-
-    # Fetch the products created by the logged-in user
-    products = Product.objects.filter(seller=user, is_public=True, is_sold=False)
-
-    # Render the profile page with the user's information and products, using the correct path to the template
-    return render(request, 'main/profile.html', {'user': user, 'products': products})
