@@ -39,4 +39,5 @@ urlpatterns = [
 
     # Help and FAQ URL
     path('help/', views.help_view, name='help'),
+
 ]

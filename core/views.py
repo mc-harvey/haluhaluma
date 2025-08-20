@@ -20,9 +20,10 @@ def signup_view(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user=form.save()
+            login(request, user)
             messages.success(request, 'Registration completed.')
-            return redirect('login')
+            return redirect('base')
         else:
             return render(
                 request,
@@ -388,7 +389,6 @@ def add_review(request, pk):
 
     return redirect('product_detail', pk=pk)
 
-
 # NEW: view function to delete a review
 @login_required
 def delete_review(request, pk):
@@ -403,3 +403,4 @@ def delete_review(request, pk):
     review.delete()
     messages.success(request, "Review deleted successfully!")
     return redirect('product_detail', pk=review.product.pk)
+
