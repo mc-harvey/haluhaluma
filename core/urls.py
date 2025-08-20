@@ -37,4 +37,6 @@ urlpatterns = [
     # NEW URL to handle review deletion
     path('review/<int:pk>/delete/', views.delete_review, name='delete_review'),
 
+    # Help and FAQ URL
+    path('help/', views.help_view, name='help'),
 ]

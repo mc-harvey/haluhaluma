@@ -70,6 +70,13 @@ def profile_view(request):
 def base(request):
     return redirect('product_list') # Redirects directly to the product list view
 
+# NEW: Help and FAQ view
+def help_view(request):
+    """
+    Renders the help and FAQ page.
+    """
+    return render(request, 'core/help.html')
+
 # ProductListView and other views remain the same as previously provided
 class ProductListView(ListView):
     model = Product
