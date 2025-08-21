@@ -1,28 +1,103 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help & FAQ</title>
-</head>
-<body>
-    <h1>Help & FAQ</h1>
-    <p>This is the help and FAQ section. Below are some common questions and answers to assist you with the platform.</p>
+{% extends "base.html" %}
 
-    <h2>Common Questions</h2>
+{% block content %}
 
-    <h3>How do I create an account?</h3>
-    <p>To create an account, click the "Sign Up" button in the top-right corner and fill out the registration form with your details.</p>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
 
-    <h3>How can I post a product for sale?</h3>
-    <p>After logging in, go to the "Products" page and click the "Add Product" button. You will be prompted to enter details about your item and upload an image.</p>
+<style>
+    .help-content h1, .help-content h2 {
+        font-family: 'Playfair Display', serif;
+    }
+    .help-content, .help-content p, .help-content a {
+        font-family: 'Lato', sans-serif;
+    }
+    .active-faq {
+        background-color: #f1f5f9;
+    }
+</style>
 
-    <h3>How do I contact a seller?</h3>
-    <p>On any product's detail page, you can find a "Message" button to send a private message directly to the seller.</p>
+<div class="max-w-6xl mx-auto p-8 rounded-lg help-content">
 
-    <h3>What payment methods are supported?</h3>
-    <p>We do not handle payments directly. All transactions and payment methods are arranged between the buyer and the seller.</p>
+    <div class="flex flex-col md:flex-row items-center md:space-x-8 mb-10">
+        <div class="md:w-full text-center md:text-left">
+            <h1 class="text-4xl font-extrabold mb-4 text-gray-800">Frequently Asked Questions</h1>
+            <p class="text-gray-600 leading-relaxed text-lg">
+                We're here to help! Our comprehensive FAQ section is designed to provide quick answers to your most common questions about the marketplace, from account management to product listings and more.
+            </p>
+        </div>
+    </div>
 
-    <a href="{% url 'base' %}" class="px-2 py-1 bg-gradient-blue-500 text-white text-base rounded-md hover:bg-gradient-blue-600 transition duration-200">Back to Home</a>
-</body>
-</html>
+    <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
+
+        <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-md">
+            <div class="space-y-2">
+                <a href="#answer-1" class="faq-question-link block py-3 px-4 rounded-lg text-lg font-bold text-blue-600 hover:bg-blue-50 transition-colors duration-200 active-faq" data-target="answer-1">How do I create an account?</a>
+                <a href="#answer-2" class="faq-question-link block py-3 px-4 rounded-lg text-lg font-bold text-pink-600 hover:bg-pink-50 transition-colors duration-200" data-target="answer-2">How can I post a product for sale?</a>
+                <a href="#answer-3" class="faq-question-link block py-3 px-4 rounded-lg text-lg font-bold text-blue-600 hover:bg-blue-50 transition-colors duration-200" data-target="answer-3">How do I contact a seller?</a>
+                <a href="#answer-4" class="faq-question-link block py-3 px-4 rounded-lg text-lg font-bold text-pink-600 hover:bg-pink-50 transition-colors duration-200" data-target="answer-4">What payment methods are supported?</a>
+            </div>
+        </div>
+
+        <div class="md:w-2/3 bg-white p-6 rounded-lg shadow-md">
+            <div id="answer-1" class="faq-answer">
+                <h2 class="text-xl font-bold mb-2 text-blue-600">How do I create an account?</h2>
+                <p class="text-gray-600">To create an account, click the "Sign Up" button in the top-right corner and fill out the registration form with your details.</p>
+            </div>
+
+            <div id="answer-2" class="faq-answer hidden">
+                <h2 class="text-xl font-bold mb-2 text-pink-600">How can I post a product for sale?</h2>
+                <p class="text-gray-600">After logging in, go to the "Products" page and click the "Add Product" button. You will be prompted to enter details about your item and upload an image.</p>
+            </div>
+
+            <div id="answer-3" class="faq-answer hidden">
+                <h2 class="text-xl font-bold mb-2 text-blue-600">How do I contact a seller?</h2>
+                <p class="text-gray-600">On any product's detail page, you can find a "Message" button to send a private message directly to the seller.</p>
+            </div>
+
+            <div id="answer-4" class="faq-answer hidden">
+                <h2 class="text-xl font-bold mb-2 text-pink-600">What payment methods are supported?</h2>
+                <p class="text-gray-600">We do not handle payments directly. All transactions and payment methods are arranged between the buyer and the seller.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const questionLinks = document.querySelectorAll('.faq-question-link');
+        const answerContainers = document.querySelectorAll('.faq-answer');
+
+        questionLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+
+                const targetId = event.target.dataset.target;
+
+                answerContainers.forEach(container => {
+                    container.classList.add('hidden');
+                });
+
+                const targetAnswer = document.getElementById(targetId);
+                targetAnswer.classList.remove('hidden');
+
+                questionLinks.forEach(item => {
+                    item.classList.remove('active-faq', 'bg-blue-100', 'bg-pink-100');
+                });
+                if (event.target.classList.contains('text-blue-600')) {
+                    event.target.classList.add('active-faq', 'bg-blue-100');
+                } else {
+                    event.target.classList.add('active-faq', 'bg-pink-100');
+                }
+            });
+        });
+    });
+</script>
+<style>
+    .active-faq {
+        background-color: #f1f5f9;
+    }
+</style>
+
+{% endblock content %}
