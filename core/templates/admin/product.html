@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}All Products | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="p-6">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6">All Products</h1>
+
+        <a href="{% url 'staff_dashboard' %}"
+       class="text-sm px-3 py-1.5 rounded-md border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition">
+        ← Back
+    </a>
+
+    <div class="bg-white shadow-md rounded-2xl overflow-hidden">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-gray-100 text-gray-700">
+                    <th class="px-6 py-3 text-sm font-semibold">Name</th>
+                    <th class="px-6 py-3 text-sm font-semibold">Public</th>
+                    <th class="px-6 py-3 text-sm font-semibold">Sold</th>
+                    <th class="px-6 py-3 text-sm font-semibold">Created</th>
+                    <th class="px-6 py-3 text-sm font-semibold">Seller</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+            <tr class="border-t hover:bg-gray-50">
+                <!-- Product Title -->
+                <td class="px-6 py-3 font-medium text-gray-800">{{ product.title }}</td>
+
+                <!-- Public -->
+                <td class="px-6 py-3">
+                    {% if product.is_public %}
+                        <span class="px-2 py-1 text-xs font-medium bg-green-100 text-green-700 rounded-full">Yes</span>
+                    {% else %}
+                        <span class="px-2 py-1 text-xs font-medium bg-red-100 text-red-700 rounded-full">No</span>
+                    {% endif %}
+                </td>
+
+                <!-- Sold -->
+                <td class="px-6 py-3">
+                    {% if product.is_sold %}
+                        <span class="px-2 py-1 text-xs font-medium bg-blue-100 text-blue-700 rounded-full">Sold</span>
+                    {% else %}
+                        <span class="px-2 py-1 text-xs font-medium bg-yellow-100 text-yellow-700 rounded-full">Available</span>
+                    {% endif %}
+                </td>
+
+                <!-- Posted At -->
+                <td class="px-6 py-3 text-sm text-gray-600">
+                    {{ product.posted_at|date:"M d, Y H:i" }}
+                </td>
+                <!-- Seller -->
+                <td class="px-6 py-3 text-sm text-gray-600">
+                    {{ product.seller.username }}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="px-6 py-4 text-center text-gray-500">
+                    No products found.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

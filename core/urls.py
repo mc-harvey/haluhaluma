@@ -2,10 +2,11 @@
 
 from django.urls import path
 from . import views
+from .admin import admin_site
 from .views import (
     ProductListView, ProductDetailView, ProductCreateView, ProductUpdateView, ProductDeleteView,
     InboxView, SendMessageView, MessageDetailView,  # Removed SentMessagesView
-    delete_conversation_view
+    delete_conversation_view, staff_dashboard
 )
 
 urlpatterns = [
@@ -39,5 +40,12 @@ urlpatterns = [
 
     # Help and FAQ URL
     path('help/', views.help_view, name='help'),
+
+    # ADMIN DASHBOARD    path("admin/", admin_site.urls),  # Django admin, but home redirects
+    path("staff/dashboard/", views.staff_dashboard, name="staff_dashboard"),
+    path("staff/users/", views.user, name="user"),
+    path("staff/product/", views.product, name="product"),
+
+
 
 ]

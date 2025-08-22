@@ -6,7 +6,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django.db.models import Max, F, Subquery, OuterRef
@@ -14,7 +14,7 @@ from django.http import HttpResponseForbidden
 # Combined imports to avoid redundancy
 from .models import CustomUser, Product, Message, Review
 from .forms import CustomUserCreationForm, ProductForm, MessageForm
-
+from django.contrib.admin.views.decorators import staff_member_required
 
 def signup_view(request):
     if request.method == 'POST':
@@ -404,3 +404,50 @@ def delete_review(request, pk):
     messages.success(request, "Review deleted successfully!")
     return redirect('product_detail', pk=review.product.pk)
 
+def product_list_public(request):
+    """
+    This view fetches all products to display on a public page.
+    """
+    all_products = Product.objects.all()  # Fetches all products
+    context = {
+        'products': all_products
+    }
+    return render(request, 'main/product_list_public.html', context)
+
+def admin_url_for(model, action="changelist"):
+    opts = model._meta
+    return reverse(f"admin:{opts.app_label}_{opts.model_name}_{action}")
+
+
+@staff_member_required
+def staff_dashboard(request):
+    metrics = {
+        'users': CustomUser.objects.count(),
+        'products': Product.objects.count(),
+        'public_products': Product.objects.filter(is_public=True).count(),
+        'unsold_public': Product.objects.filter(is_public=True, is_sold=False).count(),
+    }
+    recent_products = Product.objects.all().order_by('-posted_at')[:5]
+
+    context = {
+        'metrics': metrics,
+        'links': {
+            'products': admin_url_for(Product),
+            'users': admin_url_for(CustomUser),
+        },
+        'recent_products': recent_products,
+    }
+    return render(request, 'admin/admin_dashboard.html', context)
+
+
+from .models import CustomUser  # adjust to your actual user model
+
+@staff_member_required
+def user(request):
+    users = CustomUser.objects.all()
+    return render(request, "admin/user.html", {"users": users})
+
+@staff_member_required
+def product(request):
+    products = Product.objects.all()
+    return render(request, "admin/product.html", {"products": products})

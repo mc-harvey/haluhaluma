@@ -100,7 +100,7 @@
                             <p class="text-sm text-gray-600">{{ product.description|truncatewords:20 }}</p>
                             <div class="flex items-center justify-between mt-2">
                                 <div>
-                                    <p class="font-medium text-gray-900">${{ product.price }}</p>
+                                    <p class="font-medium text-gray-900">₱{{ product.price }}</p>
                                 </div>
                                 {% if product.is_sold %}
                                     <div class="text-sm text-gray-500">Sold</div>

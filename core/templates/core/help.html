@@ -2,24 +2,7 @@
 
 {% block content %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-
-<style>
-    .help-content h1, .help-content h2 {
-        font-family: 'Playfair Display', serif;
-    }
-    .help-content, .help-content p, .help-content a {
-        font-family: 'Lato', sans-serif;
-    }
-    .active-faq {
-        background-color: #f1f5f9;
-    }
-</style>
-
 <div class="max-w-6xl mx-auto p-8 rounded-lg help-content">
-
     <div class="flex flex-col md:flex-row items-center md:space-x-8 mb-10">
         <div class="md:w-full text-center md:text-left">
             <h1 class="text-4xl font-extrabold mb-4 text-gray-800">Frequently Asked Questions</h1>
@@ -30,7 +13,6 @@
     </div>
 
     <div class="flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-6">
-
         <div class="md:w-1/3 bg-white p-6 rounded-lg shadow-md">
             <div class="space-y-2">
                 <a href="#answer-1" class="faq-question-link block py-3 px-4 rounded-lg text-lg font-bold text-blue-600 hover:bg-blue-50 transition-colors duration-200 active-faq" data-target="answer-1">How do I create an account?</a>
@@ -45,17 +27,14 @@
                 <h2 class="text-xl font-bold mb-2 text-blue-600">How do I create an account?</h2>
                 <p class="text-gray-600">To create an account, click the "Sign Up" button in the top-right corner and fill out the registration form with your details.</p>
             </div>
-
             <div id="answer-2" class="faq-answer hidden">
                 <h2 class="text-xl font-bold mb-2 text-pink-600">How can I post a product for sale?</h2>
                 <p class="text-gray-600">After logging in, go to the "Products" page and click the "Add Product" button. You will be prompted to enter details about your item and upload an image.</p>
             </div>
-
             <div id="answer-3" class="faq-answer hidden">
                 <h2 class="text-xl font-bold mb-2 text-blue-600">How do I contact a seller?</h2>
                 <p class="text-gray-600">On any product's detail page, you can find a "Message" button to send a private message directly to the seller.</p>
             </div>
-
             <div id="answer-4" class="faq-answer hidden">
                 <h2 class="text-xl font-bold mb-2 text-pink-600">What payment methods are supported?</h2>
                 <p class="text-gray-600">We do not handle payments directly. All transactions and payment methods are arranged between the buyer and the seller.</p>
@@ -94,10 +73,5 @@
         });
     });
 </script>
-<style>
-    .active-faq {
-        background-color: #f1f5f9;
-    }
-</style>
 
 {% endblock content %}

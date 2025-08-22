@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard | {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="flex">
+    <!-- Sidebar -->
+    <aside class="w-64 bg-white shadow-md rounded-xl p-4 mr-6 hidden md:block">
+        <h2 class="text-xl font-semibold text-gray-700 mb-6">Admin Panel</h2>
+        <nav class="space-y-2">
+            <a href="{% url 'staff_dashboard' %}" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-medium">
+                <i class="fas fa-tachometer-alt mr-3 text-blue-500"></i> Dashboard
+            </a>
+            <a href="{% url 'user' %}" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-medium">
+                <i class="fas fa-users mr-3 text-purple-500"></i> Users
+            </a>
+            <a href="{% url 'product' %}" class="flex items-center px-3 py-2 rounded-lg hover:bg-blue-100 text-gray-700 font-medium">
+                <i class="fas fa-box mr-3 text-yellow-500"></i> Products
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+        <h1 class="text-2xl font-bold text-gray-800 mb-6">Welcome Back 👋</h1>
+
+        <!-- Metrics Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-pink-500 text-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-lg font-semibold">Total Users</h2>
+                <p class="text-3xl font-bold mt-2">{{ metrics.users }}</p>
+                <p class="text-sm opacity-80 mt-1">As of today</p>
+            </div>
+
+            <div class="bg-purple-500 text-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-lg font-semibold">Total Products</h2>
+                <p class="text-3xl font-bold mt-2">{{ metrics.products }}</p>
+                <p class="text-sm opacity-80 mt-1">Active Listings</p>
+            </div>
+
+            <div class="bg-yellow-500 text-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-lg font-semibold">Public Products</h2>
+                <p class="text-3xl font-bold mt-2">{{ metrics.public_products }}</p>
+                <p class="text-sm opacity-80 mt-1">Visible to Buyers</p>
+            </div>
+
+            <div class="bg-green-500 text-white p-6 rounded-2xl shadow-md">
+                <h2 class="text-lg font-semibold">Unsold & Public</h2>
+                <p class="text-3xl font-bold mt-2">{{ metrics.unsold_public }}</p>
+                <p class="text-sm opacity-80 mt-1">Available Stock</p>
+            </div>
+        </div>
+
+        <!-- Example Data Table -->
+        <div class="bg-white shadow-md rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-700">Recent Activity</h2>
+                <a href="{{ links.products }}" class="text-blue-500 hover:underline">View All</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 text-left text-gray-600">
+                            <th class="p-3">Product</th>
+                            <th class="p-3">Owner</th>
+                            <th class="p-3">Status</th>
+                            <th class="p-3">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for product in recent_products %}
+                    <tr class="border-t hover:bg-gray-50">
+                        <!-- Product title -->
+                        <td class="p-3 font-medium text-gray-800">{{ product.title }}</td>
+
+                        <!-- Owner -->
+                        <td class="p-3">{{ product.seller.username }}</td>
+
+                        <!-- Status -->
+                        <td class="p-3">
+                            {% if product.is_sold %}
+                                <span class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded-lg">Sold</span>
+                            {% elif product.is_public %}
+                                <span class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded-lg">Public</span>
+                            {% else %}
+                                <span class="px-2 py-1 text-xs bg-red-100 text-red-700 rounded-lg">Private</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Created -->
+                        <td class="p-3 text-gray-600 text-xs">
+                            {{ product.posted_at|date:"Y-m-d H:i" }}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-3 text-center text-gray-500">
+                            No recent products found.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
