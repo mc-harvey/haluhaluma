@@ -42,19 +42,6 @@
                 <a href="{% url 'product_list' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Home</a>
 
 
-                <div class="relative group">
-                    <button class="text-white text-base font-thin hover:text-gray-300 transition duration-200 focus:outline-none">
-                        Categories
-                        <i class="fas fa-chevron-down ml-2 text-sm transition-transform duration-200 group-hover:rotate-180"></i>
-                    </button>
-                    <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform scale-95 origin-top-right">
-                        <a href="{% url 'product_list' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">All Categories</a>
-                        {% for category in categories %}
-                            <a href="{% url 'category_list' category %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">{{ category }}</a>
-                        {% endfor %}
-                    </div>
-                </div>
-
                 <a href="{% url 'help' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Help</a>
 
                 {% if user.is_authenticated %}
@@ -67,7 +54,6 @@
 
                     {# Messaging Links #}
                     <a href="{% url 'inbox' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Inbox</a>
-                    {# REMOVED: <a href="{% url 'sent_messages' %}" class="text-white hover:text-gray-300 transition duration-200">Sent</a> #}
 
                     <a href="{% url 'profile' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Profile</a>
                     {% if user.is_staff %}
@@ -102,19 +88,21 @@
             const dropdownButton = document.querySelector('.group > button');
             const dropdownMenu = document.querySelector('.group > div');
 
-            dropdownButton.addEventListener('click', () => {
-                dropdownMenu.classList.toggle('opacity-0');
-                dropdownMenu.classList.toggle('invisible');
-                dropdownMenu.classList.toggle('scale-95');
-                dropdownMenu.classList.toggle('scale-100');
-            });
+            if (dropdownButton && dropdownMenu) {
+                dropdownButton.addEventListener('click', () => {
+                    dropdownMenu.classList.toggle('opacity-0');
+                    dropdownMenu.classList.toggle('invisible');
+                    dropdownMenu.classList.toggle('scale-95');
+                    dropdownMenu.classList.toggle('scale-100');
+                });
 
-            document.addEventListener('click', (event) => {
-                if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
-                    dropdownMenu.classList.add('opacity-0', 'invisible', 'scale-95');
-                    dropdownMenu.classList.remove('scale-100');
-                }
-            });
+                document.addEventListener('click', (event) => {
+                    if (!dropdownButton.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                        dropdownMenu.classList.add('opacity-0', 'invisible', 'scale-95');
+                        dropdownMenu.classList.remove('scale-100');
+                    }
+                });
+            }
         });
     </script>
 

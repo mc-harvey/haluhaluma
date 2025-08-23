@@ -16,11 +16,14 @@ from .models import CustomUser, Product, Message, Review
 from .forms import CustomUserCreationForm, ProductForm, MessageForm
 from django.contrib.admin.views.decorators import staff_member_required
 
+# CORE/VIEWS.PY
+from .forms import CustomUserCreationForm
+
 def signup_view(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)
+        form = CustomUserCreationForm(request.POST, request.FILES) # Correctly pass both POST and FILES
         if form.is_valid():
-            user=form.save()
+            user = form.save()
             login(request, user)
             messages.success(request, 'Registration completed.')
             return redirect('base')
@@ -30,10 +33,9 @@ def signup_view(request):
                 'main/signup.html',
                 {'form': form, 'error_message': 'Registration failed. Invalid information.'}
             )
-    else:
-        form = CustomUserCreationForm()
-        return render(request, 'main/signup.html', {'form': form})
-
+    else: # This block handles the GET request
+        form = CustomUserCreationForm() # Initialize the form without any data or files
+    return render(request, 'main/signup.html', {'form': form})
 
 def login_view(request):
     form = AuthenticationForm(request, data=request.POST or None)
@@ -87,16 +89,7 @@ class ProductListView(ListView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        category_name = self.kwargs.get('category_name')
-        if category_name:
-            queryset = queryset.filter(category__iexact=category_name)
         return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['selected_category'] = self.kwargs.get('category_name')
-        context['categories'] = Product.objects.values_list('category', flat=True).distinct()
-        return context
 
 
 class ProductDetailView(DetailView):

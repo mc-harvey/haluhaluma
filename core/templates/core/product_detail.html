@@ -16,9 +16,6 @@
 
         <div>
             <h2 class="text-3xl font-bold text-gray-800">{{ product.title }}</h2>
-            <a href="{% url 'category_list' product.category %}" class="text-gray-500 hover:underline">
-                {{ product.category }}
-            </a>
             <p class="text-2xl font-semibold text-green-600 mt-2">₱{{ product.price }}</p>
             <p class="mt-4 text-gray-700">{{ product.description }}</p>
             <p class="mt-2 text-sm text-gray-500">
@@ -46,7 +43,6 @@
 </div>
 
 <div class="container mx-auto p-4 my-8">
-    <!-- Star Rating and Review Count Section -->
     <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-pink-300">
         <h4 class="text-2xl font-bold text-gray-800 mb-3">Customer Ratings</h4>
         <hr class="mb-4">
@@ -72,7 +68,6 @@
         {% endif %}
     </div>
 
-    <!-- Leave a Review Form -->
     <div class="bg-white p-6 rounded-2xl shadow-xl mb-8 border-t-4 border-blue-400">
         <h4 class="text-2xl font-bold text-gray-800 mb-3">Leave a Review</h4>
         <hr class="mb-4">
@@ -105,7 +100,6 @@
         {% endif %}
     </div>
 
-    <!-- Individual Reviews Section -->
     <div class="bg-white p-6 rounded-2xl shadow-xl border-t-4 border-pink-300">
         <h4 class="text-2xl font-bold text-gray-800 mb-3">All Reviews</h4>
         <hr class="mb-4">

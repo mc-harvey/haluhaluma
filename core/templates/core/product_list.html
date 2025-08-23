@@ -3,7 +3,6 @@
 {% block content %}
 <h1 class="text-3xl font-bold text-gray-800 mb-3">Products</h1>
 
-<!-- Add Product button (login required) -->
 <div class="mb-6 flex justify-end">
   {% if user.is_authenticated %}
     <a href="{% url 'product_add' %}"
@@ -18,21 +17,6 @@
   {% endif %}
 </div>
 
-<!-- Category Filter Buttons -->
-<div class="mb-6 flex flex-wrap gap-2">
-    <a href="{% url 'product_list' %}"
-       class="px-3 py-1 rounded-md text-sm border {% if not selected_category %}bg-blue-500 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100{% endif %}">
-        All
-    </a>
-    {% for category in categories %}
-        <a href="{% url 'category_list' category %}"
-           class="px-3 py-1 rounded-md text-sm border {% if selected_category == category %}bg-blue-500 text-white{% else %}bg-white text-gray-700 hover:bg-gray-100{% endif %}">
-            {{ category }}
-        </a>
-    {% endfor %}
-</div>
-
-<!-- Product Grid -->
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {% for product in products %}
         <div class="bg-white rounded-lg shadow-md overflow-hidden transition-transform duration-200 hover:scale-105">
@@ -57,4 +41,3 @@
     {% endfor %}
 </div>
 {% endblock %}
-
