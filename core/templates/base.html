@@ -55,7 +55,7 @@
                     {# Messaging Links #}
                     <a href="{% url 'inbox' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Inbox</a>
 
-                    <a href="{% url 'profile' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Profile</a>
+                    <a href="{% url 'my_profile' %}" class="text-white text-base font-thin hover:text-gray-300 transition duration-200">Profile</a>
                     {% if user.is_staff %}
                     <a href="{% url 'staff_dashboard' %}" class="px-2 py-1 bg-yellow-500 text-white text-base rounded-md hover:bg-yellow-600 transition duration-200">Admin</a>
                     {% endif %}

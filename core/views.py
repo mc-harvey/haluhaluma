@@ -59,15 +59,20 @@ def logout_view(request):
 
 
 @login_required
-def profile_view(request):
-    user = request.user  # Get the logged-in user
+def profile_view(request, username):
+    # Get the user whose profile is being viewed
+    user = get_object_or_404(CustomUser, username=username)
 
-    # Fetch the products created by the logged-in user
-    products = Product.objects.filter(seller=user, is_public=True, is_sold=False)
+    # Fetch the products created by this user
+    active_products = Product.objects.filter(seller=user, is_public=True, is_sold=False)
+    sold_products = Product.objects.filter(seller=user, is_public=True, is_sold=True)
 
-    # Render the profile page with the user's information and products, using the correct path to the template
-    return render(request, 'main/profile.html', {'user': user, 'products': products})
-
+    # Render the profile page with the user's information and products
+    return render(
+        request,
+        'main/profile.html',
+        {'profile_user': user, 'active_products': active_products, 'sold_products': sold_products}
+    )
 
 # REVISED: Make the base view redirect to the product_list
 def base(request):
@@ -88,10 +93,11 @@ class ProductListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        return queryset
+        # Exclude products that are marked as sold
+        return Product.objects.filter(is_sold=False)
 
 
+# REVISED: ProductDetailView to add sold context
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'core/product_detail.html'
@@ -113,7 +119,6 @@ class ProductDetailView(DetailView):
             context['has_reviewed'] = product.reviews.filter(author=self.request.user).exists()
         else:
             context['has_reviewed'] = False
-
         return context
 
 
@@ -355,10 +360,20 @@ def delete_conversation_view(request, pk):
     return redirect('inbox')
 
 
-# REVISED: add_review view
+# REVISED: add_review view to check if product is sold
 @login_required
 def add_review(request, pk):
     product = get_object_or_404(Product, pk=pk)
+
+    # NEW: Check if the user is the seller of the product
+    if request.user == product.seller:
+        messages.error(request, "You cannot review your own product.")
+        return redirect('product_detail', pk=pk)
+
+    # NEW: Check if the product is sold before allowing a review
+    if not product.is_sold:
+        messages.error(request, "You can only review products that have been marked as sold.")
+        return redirect('product_detail', pk=pk)
 
     if request.method == 'POST':
         rating = request.POST.get('rating')
@@ -444,3 +459,22 @@ def user(request):
 def product(request):
     products = Product.objects.all()
     return render(request, "admin/product.html", {"products": products})
+
+# NEW: View to handle marking a product as sold
+@login_required
+def mark_as_sold(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+
+    if request.user != product.seller:
+        messages.error(request, "You are not authorized to mark this product as sold.")
+        return redirect('product_detail', pk=pk)
+
+    if request.method == 'POST':
+        product.is_sold = True
+        product.save()
+        messages.success(request, "Product marked as sold!")
+    return redirect('product_detail', pk=pk)
+
+@login_required
+def my_profile(request):
+    return redirect('profile', username=request.user.username)

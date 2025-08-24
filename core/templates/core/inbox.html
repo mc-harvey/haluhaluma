@@ -9,13 +9,13 @@
             <div class="block bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-200 relative">
                 <a href="{% url 'message_detail' message.conversation_starter.pk|default:message.pk %}" class="block">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="font-semibold text-gray-800">
+                      <span class="font-semibold text-gray-800">
                             {% if request.user == message.sender %}
-                                To: {{ message.receiver.username }}
+                                To: <a href="{% url 'profile' username=message.receiver.username %}" class="text-blue-500 hover:underline">{{ message.receiver.username }}</a>
                             {% else %}
-                                From: {{ message.sender.username }}
+                                From: <a href="{% url 'profile' username=message.sender.username %}" class="text-blue-500 hover:underline">{{ message.sender.username }}</a>
                             {% endif %}
-                        </span>
+                      </span>
 
                         <div class="flex items-center gap-2">
                             <span class="text-sm text-gray-500">{{ message.sent_at|date:"M d, Y H:i" }}</span>

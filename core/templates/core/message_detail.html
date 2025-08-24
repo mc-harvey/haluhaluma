@@ -12,7 +12,9 @@
                         {% if message.sender == request.user %}
                             You
                         {% else %}
+                            <a href="{% url 'profile' username=message.sender.username %}" class="text-blue-500 hover:underline">
                             {{ message.sender.username }}
+                            </a>
                         {% endif %}
                     </span>
                     <span class="text-sm text-gray-500">{{ message.sent_at|date:"M d, Y H:i" }}</span>

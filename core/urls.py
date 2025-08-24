@@ -8,6 +8,8 @@ from .views import (
     InboxView, SendMessageView, MessageDetailView,
     delete_conversation_view, staff_dashboard
 )
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('signup/', views.signup_view, name='signup'),
@@ -15,6 +17,11 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('profile/', views.profile_view, name='profile'),
     path('', views.base, name='base'),
+
+    # REVISED: Use a dedicated URL for the user's own profile
+    path('my-profile/', views.my_profile, name='my_profile'),
+    # This URL is for viewing any user's profile
+    path('profile/<str:username>/', views.profile_view, name='profile'),
 
     path('products/', ProductListView.as_view(), name='product_list'),
     path('products/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
@@ -43,4 +50,7 @@ urlpatterns = [
     path("staff/dashboard/", views.staff_dashboard, name="staff_dashboard"),
     path("staff/users/", views.user, name="user"),
     path("staff/product/", views.product, name="product"),
-]
+
+    # NEW URL to handle marking a product as sold
+    path('products/<int:pk>/sold/', views.mark_as_sold, name='mark_as_sold'),
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
